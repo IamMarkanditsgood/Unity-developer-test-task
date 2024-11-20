@@ -6,6 +6,9 @@ public class UiManager : MonoBehaviour
 {
     [SerializeField] private BasicScreen[] _screens;
 
+    [Header("Initializable Screens")]
+    [SerializeField] private LevelsScreen _levelsScreen;
+
     private List<string> _levelWords = new List<string>();  
     private List<LevelsData> _levelsData = new List<LevelsData>();
 
@@ -14,9 +17,14 @@ public class UiManager : MonoBehaviour
         _levelWords = levels;
         _levelsData = levelsData;
 
-        foreach (var screen in _screens)
-        {
-            screen.Init();
-        }
+        InitializeScreens();
+    }
+
+    private void InitializeScreens()
+    {
+        _levelsScreen.Init(_levelWords);
+
+        _levelsScreen.Show();
+        //TO DO
     }
 }

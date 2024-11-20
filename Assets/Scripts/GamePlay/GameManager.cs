@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameData _gameData;
     [SerializeField] private LevelWordsManager _levelWordsManager;
 
+    private UiManager _uiManager;
+
     public void Init(GameData gameData)
     {
         _gameData = gameData;

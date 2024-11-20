@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class LevelWordsManager
 {
-    [SerializeField] private List<LevelsData> _levelsData;
+    private List<LevelsData> _levelsData = new List<LevelsData>();
 
     public List<LevelsData> LevelsData => _levelsData;
 
@@ -22,6 +22,7 @@ public class LevelWordsManager
             _levelsData.Add(levelData);
         }
     }
+
 
     private List<GameWord> GetLevelWords(int levelIndex, GameData gameData)
     {

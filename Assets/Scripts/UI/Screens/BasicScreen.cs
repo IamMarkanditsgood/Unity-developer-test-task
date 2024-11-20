@@ -7,8 +7,6 @@ public abstract class BasicScreen : MonoBehaviour
 {
     [SerializeField] private GameObject _screenView;
 
-    public abstract void Init();
-
     public virtual void Show()
     {
         _screenView.SetActive(true);

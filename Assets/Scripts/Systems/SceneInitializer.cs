@@ -23,7 +23,7 @@ public class SceneInitializer : MonoBehaviour
     {
         List<string> levels = _gameManager.GetLevels();
         List<LevelsData> levelsData = _gameManager.GetLevelsData();
-        
+
         _uiManager.InitUI(levels, levelsData);
     }
 

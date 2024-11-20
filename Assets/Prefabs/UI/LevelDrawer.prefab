@@ -581,8 +581,9 @@ GameObject:
   - component: {fileID: 4377473764560005911}
   - component: {fileID: 4323562013796453676}
   - component: {fileID: 2730293664866742757}
+  - component: {fileID: 4328640829820258268}
   m_Layer: 5
-  m_Name: Level1
+  m_Name: LevelDrawer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -606,7 +607,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800.2147, y: 154.5823}
+  m_SizeDelta: {x: 800.2147, y: 156.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4377473764560005911
 CanvasRenderer:
@@ -690,3 +691,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4328640829820258268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7909554193795172394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbcd3135fad12b540afabf1d72aa42cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelWordText: {fileID: 4584779483804828126}
+  _levelProgressText: {fileID: 4278265606163408529}
+  _progressMedal: {fileID: 6145618833501600803}
+  _medals:
+  - {fileID: 21300000, guid: 13fb047ad226175408b66659e2531183, type: 3}
+  - {fileID: 21300000, guid: e81f9ebd41e46d247aa5b1056f41eb22, type: 3}
+  - {fileID: 21300000, guid: 1ed9bdf67d4c7c848bd14f4105cd9675, type: 3}
+  _medalPercents: 1e0000003c0000005a000000
+  _levelProgress: {fileID: 3968510472047713948}
+  _doneSign: {fileID: 6713257043622154581}

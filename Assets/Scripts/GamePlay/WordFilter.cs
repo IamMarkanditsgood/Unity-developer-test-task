@@ -7,14 +7,16 @@ public class WordFilter
         var levelWordCounts = CountLetters(levelWord);
 
         var validWords = new List<GameWord>();
+        var uniqueWords = new HashSet<string>();
 
         foreach (var word in words)
         {
             var wordCounts = CountLetters(word.Word);
 
-            if (CanFormWord(wordCounts, levelWordCounts))
+            if (CanFormWord(wordCounts, levelWordCounts) && !uniqueWords.Contains(word.Word))
             {
                 validWords.Add(word);
+                uniqueWords.Add(word.Word);
             }
         }
 
