@@ -13,11 +13,15 @@ public class LevelsSetter
     [SerializeField] private int _minDrawers;
 
     private List<GameObject> _drawers = new List<GameObject>();
+    private List<LevelData> _levelData = new List<LevelData>();
 
-    public void SetLevels(List<string> levelWords)
+    public List<GameObject> Drawers => _drawers;
+
+    public void SetLevels(List<LevelData> levelData)
     {
+        _levelData = levelData;
         CleanLevels();
-        SetLevelDrawers(levelWords);
+        SetLevelDrawers();
     }
 
     private void CleanLevels()
@@ -30,15 +34,15 @@ public class LevelsSetter
         _drawers.Clear();
     }
 
-    private void SetLevelDrawers(List<string> levelWords)
+    private void SetLevelDrawers()
     {
-        for (int i = 0; i < levelWords.Count; i++)
+        for (int i = 0; i < _levelData.Count; i++)
         {
             GameObject newDrawer = UnityEngine.Object.Instantiate(_levelDrawerPref, _content);
             _drawers.Add(newDrawer);
 
-            List<int> levelsProgress = GetLevelProgress(levelWords);
-            newDrawer.GetComponent<LevelDrawer>().Init(levelWords[i], levelsProgress[i]);
+            List<int> levelsProgress = GetLevelProgress();
+            newDrawer.GetComponent<LevelDrawer>().Init(_levelData[i].levelWord, levelsProgress[i]);
         }
 
         if(_drawers.Count < _minDrawers)
@@ -53,17 +57,13 @@ public class LevelsSetter
         }
     }
 
-    private List<int> GetLevelProgress(List<string> levelWords)
+    private List<int> GetLevelProgress()
     {
         List<int> levelsProgress = new List<int>();
 
-        foreach (var level in levelWords)
+        foreach (var levelData in _levelData)
         {
-            int percent = 0;
-            if (SaveManager.IsSaved("Progress" + level))
-            {
-                 percent = SaveManager.LoadInt("Progress" + level);
-            }
+            int percent = levelData.progress;       
             levelsProgress.Add(percent);
         }
         return levelsProgress;

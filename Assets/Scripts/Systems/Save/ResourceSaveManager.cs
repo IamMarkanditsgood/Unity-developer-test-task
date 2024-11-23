@@ -12,7 +12,7 @@ public class ResourceSaveManager
     {
         if (ResourceKeys.TryGetValue(resource, out string key))
         {
-            SaveManager.SaveInt(key, amount);
+            SaveManager.PlayerPrefs.SaveInt(key, amount);
         }
         else
         {
@@ -22,9 +22,9 @@ public class ResourceSaveManager
 
     public int LoadResource(ResourceTypes resource)
     {
-        if (ResourceKeys.TryGetValue(resource, out string key) && SaveManager.IsSaved(key))
+        if (ResourceKeys.TryGetValue(resource, out string key) && SaveManager.PlayerPrefs.IsSaved(key))
         {
-            return SaveManager.LoadInt(key, 0);
+            return SaveManager.PlayerPrefs.LoadInt(key, 0);
         }
 
         Debug.LogWarning($"Resource not found or not saved: {resource}");

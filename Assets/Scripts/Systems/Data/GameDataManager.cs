@@ -1,17 +1,20 @@
 using System;
+using System.IO;
 using UnityEngine;
 
 [Serializable]
-public class GameJsonManager
+public class GameDataManager
 {
     [SerializeField] private TextAsset jsonFile;
 
-    public GameData GetGameData()
+    
+
+    public GameConfig GetGameData()
     {
        
         if (jsonFile != null)
         {
-            GameData gameData = LoadDataFromTextAsset(jsonFile, new GameData());
+            GameConfig gameData = LoadDataFromTextAsset(jsonFile, new GameConfig());
 
             if (gameData != null)
             {
@@ -46,6 +49,32 @@ public class GameJsonManager
         {
             Debug.LogError($"Error parsing JSON: {ex.Message}");
             return defaultValue;
+        }
+    }
+
+    public void CleanGameSaves()
+    {
+        SaveManager.PlayerPrefs.ResetSaves();
+        DeleteAllJsonFiles();
+    }
+
+    public static void DeleteAllJsonFiles()
+    {
+        string SaveFolder = Application.persistentDataPath;
+        if (Directory.Exists(SaveFolder))
+        {
+            string[] jsonFiles = Directory.GetFiles(SaveFolder, "*.json");
+
+            foreach (var file in jsonFiles)
+            {
+                File.Delete(file);
+            }
+
+            Debug.Log("Усі JSON-файли видалено.");
+        }
+        else
+        {
+            Debug.LogWarning("Папка для збереження JSON-файлів не знайдена.");
         }
     }
 }

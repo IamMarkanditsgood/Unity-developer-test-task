@@ -5,4 +5,5 @@ using UnityEngine;
 public enum ResourceTypes 
 {
     Coins,
+    Hints,
 }

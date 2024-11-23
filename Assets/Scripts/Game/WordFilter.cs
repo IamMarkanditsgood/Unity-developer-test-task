@@ -19,8 +19,14 @@ public class WordFilter
                 uniqueWords.Add(word.Word);
             }
         }
-
+        validWords = SortByLetters(validWords);
         return validWords;
+    }
+
+    private List<GameWord> SortByLetters(List<GameWord> words)
+    {
+        words.Sort((gw1, gw2) => gw1.Word.Length.CompareTo(gw2.Word.Length));
+        return words;
     }
 
     private Dictionary<char, int> CountLetters(string word)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -10,28 +11,30 @@ public class LevelsScreen : BasicScreen
     [SerializeField] private CoinsTextManager _coinsTextManager;
     [SerializeField] private LevelsSetter _levelsManager;
 
-    private List<string> _levelWords;
+    private LevelScreenButtonsManager _levelScreenButtonsManager = new LevelScreenButtonsManager();
+    private List<LevelData> _levelData;
+
+    private void Start()
+    {
+        _coinsTextManager.Initialize();
+    }
 
     private void OnDestroy()
     {
         _coinsTextManager.Cleanup();
     }
 
-    public void Init(List<string> levelWords) 
-    {
-        _levelWords = levelWords;
-        _coinsTextManager.Initialize();
-    }
-
     public override void Show()
     {
         base.Show();
+        _levelData = SaveManager.LoadLevelList();
         SetScreen();
+        _levelScreenButtonsManager.Init(_levelsManager.Drawers);
     }
 
     private void SetScreen()
     {
         _coinsTextManager.SetCoinsText();
-        _levelsManager.SetLevels(_levelWords);
+        _levelsManager.SetLevels(_levelData);
     }
 }

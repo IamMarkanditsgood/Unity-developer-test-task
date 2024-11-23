@@ -1,30 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UiManager : MonoBehaviour
 {
     [SerializeField] private BasicScreen[] _screens;
 
-    [Header("Initializable Screens")]
-    [SerializeField] private LevelsScreen _levelsScreen;
+    [Header("Popups")]
+    [SerializeField] private HintPopup _hintsPopup;
 
-    private List<string> _levelWords = new List<string>();  
-    private List<LevelsData> _levelsData = new List<LevelsData>();
-
-    public void InitUI(List<string> levels, List<LevelsData> levelsData)
+    private void Start()
     {
-        _levelWords = levels;
-        _levelsData = levelsData;
-
-        InitializeScreens();
+        Subscribe();
     }
 
-    private void InitializeScreens()
+    private void OnDestroy()
     {
-        _levelsScreen.Init(_levelWords);
+        Unsubscribe();
+    }
 
-        _levelsScreen.Show();
-        //TO DO
+    private void Subscribe()
+    {
+        UIEvents.OnLevelButtonPressed += ShowGameScreen;
+        UIEvents.OnLevelsScreenOpenPressed += ShowLevelsScreen;
+        UIEvents.OnHintPressed += OpenHintPopup;
+
+
+    }
+
+    private void Unsubscribe()
+    {
+        UIEvents.OnLevelButtonPressed -= ShowGameScreen;
+        UIEvents.OnLevelsScreenOpenPressed -= ShowLevelsScreen;
+        UIEvents.OnHintPressed -= OpenHintPopup;
+    }
+
+    public void InitUI()
+    {
+        ShowLevelsScreen();
+    }
+
+    public void ShowLevelsScreen()
+    {
+        CloseScreens();
+        LevelsScreen levelsScreen = _screens.OfType<LevelsScreen>().FirstOrDefault();
+        levelsScreen.Show();
+    }
+
+    public void ShowGameScreen(int levelIndex)
+    {
+        CloseScreens();
+        GameScreen gameScreen = _screens.OfType<GameScreen>().FirstOrDefault();
+        gameScreen.Show();
+        gameScreen.StartLevel(levelIndex);
+    }
+
+    private void CloseScreens()
+    {
+        foreach(var screen in _screens)
+        {
+            screen.Hide();
+        }
+    }
+
+    private void OpenHintPopup(LevelData currentLevelData)
+    {
+        _hintsPopup.Show(currentLevelData);
     }
 }
