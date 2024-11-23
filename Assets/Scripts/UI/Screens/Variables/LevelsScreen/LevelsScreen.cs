@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class LevelsScreen : BasicScreen
 {
@@ -22,14 +17,16 @@ public class LevelsScreen : BasicScreen
     private void OnDestroy()
     {
         _coinsTextManager.Cleanup();
+        _levelScreenButtonsManager.Destruct();
     }
 
     public override void Show()
-    {
-        base.Show();
+    {     
         _levelData = SaveManager.LoadLevelList();
         SetScreen();
         _levelScreenButtonsManager.Init(_levelsManager.Drawers);
+
+        base.Show();
     }
 
     private void SetScreen()

@@ -1,10 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Burst.CompilerServices;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameScreen : BasicScreen
@@ -15,13 +11,17 @@ public class GameScreen : BasicScreen
 
     [SerializeField] private float _timeBeforeWordCheck = 1f;
     [SerializeField] private int _coinsReward;
-    private List<LevelData> _levels = new List<LevelData>();
-    private LevelData _currentLevel = new LevelData();
-    private GamePlayManager _gamePlayManager = new GamePlayManager();
 
+    private GamePlayManager _gamePlayManager = new GamePlayManager();
+    private LevelData _currentLevel = new LevelData();
+    
+    private Coroutine _prevCheckWordCoroutine;
     private List<char> _levelWord = new List<char>();
+    private int _currentLevelIndex;
     private int _hints = 10;
     private float _timer = 0;
+
+    private const int _timerSecond = 1;
 
     private void Start()
     {
@@ -32,7 +32,7 @@ public class GameScreen : BasicScreen
     private void OnDestroy()
     {
         UnSubscribe();
-        _coinsTextManager.Cleanup();    
+        _coinsTextManager.Cleanup();
     }
 
     private void Subscribe()
@@ -43,7 +43,10 @@ public class GameScreen : BasicScreen
         _gameScreenButtonsManager.OnFullErase += Erase;
         _gameScreenButtonsManager.OnLetterErase += EraseLastLetter;
         _gameScreenButtonsManager.OnLetterPressed += LetterPressed;
+
+        ResourceEvents.OnResourceModified += _gameScreenViewManager.ModifyHintsText;
     }
+
     private void UnSubscribe()
     {
         _gameScreenButtonsManager.Unsubscribe();
@@ -52,7 +55,16 @@ public class GameScreen : BasicScreen
         _gameScreenButtonsManager.OnFullErase -= Erase;
         _gameScreenButtonsManager.OnLetterErase -= EraseLastLetter;
         _gameScreenButtonsManager.OnLetterPressed -= LetterPressed;
+
+        ResourceEvents.OnResourceModified -= _gameScreenViewManager.ModifyHintsText;
     }
+
+    public override void Show()
+    {
+        _coinsTextManager.SetCoinsText();
+        base.Show();
+    }
+
     public override void Hide()
     {
         base.Hide();
@@ -61,11 +73,27 @@ public class GameScreen : BasicScreen
 
     public void StartLevel(int levelIndex)
     {
-        _levels = SaveManager.LoadLevelList();
-        _currentLevel = _levels[levelIndex];
+        _currentLevelIndex = levelIndex;
+        
+        List<LevelData> _levels = SaveManager.LoadLevelList();
+        _currentLevel = _levels[_currentLevelIndex];
+
         CleanScene();
         SetScene();
-        StartCoroutine(TimerCounter());
+
+        if (_currentLevel.levelWords.Count > _currentLevel.foundWords.Count)
+        {
+            StartCoroutine(TimerCounter());
+        }
+    }
+
+    private void CleanScene()
+    {
+        StopAllCoroutines();
+
+        _gameScreenViewManager.CleanScene();
+        _gameScreenButtonsManager.CleanScene();
+        _gamePlayManager.Clean();
     }
 
     private void SetScene()
@@ -80,63 +108,67 @@ public class GameScreen : BasicScreen
 
         _gameScreenButtonsManager.SetButtons(_levelWord);
     }
-    private void CleanScene()
-    {
-        StopAllCoroutines();
-        _gameScreenViewManager.CleanScene();
-        _gameScreenButtonsManager.CleanScene();
-        _gamePlayManager.Clean();
-    }
-
 
     private void Erase()
     {
-        StopAllCoroutines();
+        StopSomeCoroutine(_prevCheckWordCoroutine);
         _gamePlayManager.EraseWord();
         _gameScreenViewManager.EraseTypedWord();
         
     }
+
     private void EraseLastLetter()
     {
         _gamePlayManager.EraseLastLetter();
         _gameScreenViewManager.EraseLastLetter();
     }
 
+    private void OpenHintPopup()
+    {
+        UIEvents.OpenHint(_currentLevel);
+    }
+
+    private void LetterPressed(int letterIndex)
+    {
+        StopSomeCoroutine(_prevCheckWordCoroutine);
+
+        _gamePlayManager.TypeLetter(_levelWord[letterIndex]);
+        _gameScreenViewManager.AddTypedLetter(_levelWord[letterIndex]);
+
+        _prevCheckWordCoroutine = StartCoroutine(CheckWord());
+    }
+
     private void WordFound()
     {
-        _levels = SaveManager.LoadLevelList();
-
-        for(int i = 0; i < _levels.Count; i++)
-        {
-            if (_levels[i].levelWord == _currentLevel.levelWord)
-            {
-                _currentLevel = _levels[i];
-            }
-        }
+        _currentLevel = LevelDataManager.GetCurrentLevelData(_currentLevel.levelWord);
         ResourcesManager.Instance.ModifyResource(ResourceTypes.Coins,_coinsReward);
+
         _gamePlayManager.Clean();
-        GameEvents.WordFound(_levels);
-        SetScene();
+
+        GameEvents.WordFound(LevelDataManager.Levels);
+
+        CheckLevelProgress();
     }
+
     private void WordNotFound()
     {
         _gamePlayManager.Clean();
         SetScene();
     }
 
-    private void LetterPressed(int letterIndex)
+    private void CheckLevelProgress()
     {
-        StopAllCoroutines();
-
-        _gamePlayManager.TypeLetter(_levelWord[letterIndex]);
-        _gameScreenViewManager.AddTypedLetter(_levelWord[letterIndex]);
-
-        StartCoroutine(CheckWord());
-    }
-
-    private void OpenHintPopup()
-    {
-        UIEvents.OpenHint(_currentLevel);
+        
+        if (_currentLevel.levelWords.Count == _currentLevel.foundWords.Count)
+        {
+            StopCoroutine(TimerCounter());
+            int nextLevel = _currentLevelIndex + 1;
+            StartLevel(nextLevel);
+        }
+        else
+        {
+            SetScene();
+        }
     }
 
     private IEnumerator CheckWord()
@@ -151,27 +183,26 @@ public class GameScreen : BasicScreen
         {
             WordNotFound();
         }
-       
-        StopAllCoroutines();
     }
 
     private IEnumerator TimerCounter()
     {
         while(true)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(_timerSecond);
+
             _timer++;
-            // Do levelUpdater that will update all data of Levels
-            _currentLevel.levelTime = _timer;
-            for(int i = 0; i < _levels.Count; i++)
-            {
-                if (_levels[i].levelWord == _currentLevel.levelWord)
-                {
-                    _levels[i] = _currentLevel;
-                }
-            }
-            SaveManager.UpdateLevelListSaves(_levels);
+            LevelDataManager.UpdateTime(_currentLevel, _timer);
+
             _gameScreenViewManager.UpdateTimer(_timer);
+        }
+    }
+
+    private void StopSomeCoroutine(Coroutine coroutine)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
         }
     }
 }

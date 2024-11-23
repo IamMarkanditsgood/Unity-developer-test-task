@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SceneInitializer : MonoBehaviour
 {
     [SerializeField] private UiManager _uiManager;
     [SerializeField] private GameInitializer _gameManager;
-    [SerializeField] private GameDataManager _gameDataManager;
     [SerializeField] private ResourcesManager _resourcesManager;
+    [SerializeField] private GameLevelsJsonManager _gameDataManager;
 
     [SerializeField] private bool _resetGame;
-
 
     private void Start()
     {
@@ -18,30 +15,31 @@ public class SceneInitializer : MonoBehaviour
         {
             _gameDataManager.CleanGameSaves();
         }
+
         InitializeScene();
     }
 
     private void InitializeScene()
-    {
+    {       
         InitGameManager();
         InitUI();
         _resourcesManager.Initialize();
 
-        if (!SaveManager.PlayerPrefs.IsSaved(GameKeys.IsFirstRun))
-        {
-            FirstRun();
-        }
+        IsFirstRun();
     }
 
-    private void FirstRun()
+    private void IsFirstRun()
     {
-        SaveManager.PlayerPrefs.SaveInt(GameKeys.IsFirstRun, 1);
-        ResourcesManager.Instance.ModifyResource(ResourceTypes.Hints, 10);
+        if (!SaveManager.PlayerPrefs.IsSaved(GameKeys.IsFirstRun))
+        {
+            SaveManager.PlayerPrefs.SaveInt(GameKeys.IsFirstRun, 1);
+            ResourcesManager.Instance.ModifyResource(ResourceTypes.Hints, 10);
+        }    
     }
 
     private void InitGameManager()
     {
-        GameConfig gameData = _gameDataManager.GetGameData();
+        GameLevelsData gameData = _gameDataManager.GetGameData();
         _gameManager.Init(gameData);
     }
 

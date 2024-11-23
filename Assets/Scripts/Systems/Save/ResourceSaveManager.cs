@@ -6,6 +6,7 @@ public class ResourceSaveManager
     private readonly Dictionary<ResourceTypes, string> ResourceKeys = new Dictionary<ResourceTypes, string>
         {
             { ResourceTypes.Coins, ResourcesKeys.Coins },
+            { ResourceTypes.Hints, ResourcesKeys.Hints },
         };
 
     public void SaveResource(ResourceTypes resource, int amount)
@@ -13,6 +14,7 @@ public class ResourceSaveManager
         if (ResourceKeys.TryGetValue(resource, out string key))
         {
             SaveManager.PlayerPrefs.SaveInt(key, amount);
+            
         }
         else
         {

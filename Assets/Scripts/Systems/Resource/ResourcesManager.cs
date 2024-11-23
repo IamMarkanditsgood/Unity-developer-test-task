@@ -17,17 +17,17 @@ public class ResourcesManager : MonoBehaviour
         InitResourceDictionary();
     }
 
-    public void ModifyResource(ResourceTypes resource, int updateAmount)
-    {
-        _resources[resource] += updateAmount;
-
-        SaveManager.Resources.SaveResource(resource, _resources[resource]);
-        ResourceEvents.ResourceModified(resource, _resources[resource]);
-    }
-
     public int GetResource(ResourceTypes resource)
     {
         return _resources[resource];
+    }
+
+    public void ModifyResource(ResourceTypes resource, int updateAmount)
+    {
+        _resources[resource] += updateAmount;
+        
+        SaveManager.Resources.SaveResource(resource, _resources[resource]);
+        ResourceEvents.ResourceModified(resource, _resources[resource]);
     }
 
     public bool IsEnoughResource(ResourceTypes resource, int price)
@@ -42,6 +42,7 @@ public class ResourcesManager : MonoBehaviour
 
     private void InitResourceDictionary()
     {
+        
         _resources[ResourceTypes.Coins] = SaveManager.Resources.LoadResource(ResourceTypes.Coins);
         _resources[ResourceTypes.Hints] = SaveManager.Resources.LoadResource(ResourceTypes.Hints);
     }

@@ -12,6 +12,11 @@ public class LevelScreenButtonsManager
         Subscribe();
     }
 
+    public void Destruct()
+    {
+        Unsubscribe();
+    }
+
     private void Subscribe()
     {
         for (int i = 0; i < _levelButtons.Count; i++)
@@ -24,7 +29,7 @@ public class LevelScreenButtonsManager
         }
     }
 
-    public void Unsubscribe()
+    private void Unsubscribe()
     {
         for (int i = 0; i < _levelButtons.Count; i++)
         {

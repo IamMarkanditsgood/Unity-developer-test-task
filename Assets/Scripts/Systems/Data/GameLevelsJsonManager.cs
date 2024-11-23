@@ -3,18 +3,22 @@ using System.IO;
 using UnityEngine;
 
 [Serializable]
-public class GameDataManager
+public class GameLevelsJsonManager
 {
     [SerializeField] private TextAsset jsonFile;
 
-    
+    public void CleanGameSaves()
+    {
+        SaveManager.PlayerPrefs.ResetSaves();
+        DeleteAllJsonFiles();
+    }
 
-    public GameConfig GetGameData()
+    public GameLevelsData GetGameData()
     {
        
         if (jsonFile != null)
         {
-            GameConfig gameData = LoadDataFromTextAsset(jsonFile, new GameConfig());
+            GameLevelsData gameData = LoadDataFromTextAsset(jsonFile, new GameLevelsData());
 
             if (gameData != null)
             {
@@ -52,13 +56,7 @@ public class GameDataManager
         }
     }
 
-    public void CleanGameSaves()
-    {
-        SaveManager.PlayerPrefs.ResetSaves();
-        DeleteAllJsonFiles();
-    }
-
-    public static void DeleteAllJsonFiles()
+    private static void DeleteAllJsonFiles()
     {
         string SaveFolder = Application.persistentDataPath;
         if (Directory.Exists(SaveFolder))

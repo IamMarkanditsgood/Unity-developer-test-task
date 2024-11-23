@@ -1,16 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
-using UnityEngine;
 
 public class LevelsManager
 {
     private List<LevelData> _levelsData = new List<LevelData>();
-
-    public List<LevelData> LevelsData => _levelsData;
 
     public void Subscribe()
     {
@@ -20,7 +13,7 @@ public class LevelsManager
     {
         GameEvents.OnWordFound -= CalculateLevelsProgress;
     }
-    public void InitLevels(GameConfig gameData)
+    public void InitLevels(GameLevelsData gameData)
     {
         SetLevelsData(gameData);
         CalculateLevelsProgress(_levelsData);
@@ -39,10 +32,11 @@ public class LevelsManager
 
             LevelsData[i].progress = percentage;
         }
+
         SaveManager.UpdateLevelListSaves(LevelsData);
     }
 
-    private void SetLevelsData(GameConfig gameData)
+    private void SetLevelsData(GameLevelsData gameData)
     {
         
         if (!SaveManager.JsonStorage.Exists(GameKeys.LevelsData))
@@ -66,7 +60,7 @@ public class LevelsManager
         }
     }   
 
-    private List<GameWord> GetLevelWords(int levelIndex, GameConfig gameData)
+    private List<GameWord> GetLevelWords(int levelIndex, GameLevelsData gameData)
     {
         WordFilter wordFilter = new WordFilter();
 

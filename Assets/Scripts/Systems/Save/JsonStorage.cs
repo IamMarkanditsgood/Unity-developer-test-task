@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -33,7 +31,7 @@ public class JsonStorage
 
     private string GetFilePath(string key)
     {
-        Debug.Log(key + " saved in - " + Application.persistentDataPath);
+       
         return Path.Combine(Application.persistentDataPath, $"{key}.json");
     }
 }

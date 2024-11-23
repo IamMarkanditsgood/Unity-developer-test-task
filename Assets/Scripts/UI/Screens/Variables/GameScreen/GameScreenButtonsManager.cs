@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +28,7 @@ public class GameScreenButtonsManager
         _closeButton.onClick.AddListener(Exit);
         _fullEraseButton.onClick.AddListener(FullErase);
         _letterEraseButton.onClick.AddListener(EraseLastLater);
+
         for(int i = 0; i < _letterButtons.Length; i++)
         {
             int index = i;
@@ -42,6 +42,7 @@ public class GameScreenButtonsManager
         _closeButton.onClick.RemoveListener(Exit);
         _fullEraseButton.onClick.RemoveListener(FullErase);
         _letterEraseButton.onClick.RemoveListener(EraseLastLater);
+
         for (int i = 0; i < _letterButtons.Length; i++)
         {
             int index = i;
@@ -63,8 +64,7 @@ public class GameScreenButtonsManager
     }
 
     public void ResetButtons()
-    {
-        
+    { 
         for (int i = 0; i < _levelWord.Count; i++)
         {
             _letterButtons[i].interactable = true;

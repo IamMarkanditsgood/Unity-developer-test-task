@@ -1,10 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.IO;
 using System;
 
 [Serializable]
-public class GameConfig
+public class GameLevelsData
 {
     public List<string> Levels;      
     public List<GameWord> GameWords; 

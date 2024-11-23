@@ -57,7 +57,6 @@ public class HintPopup : MonoBehaviour
     {
         _unKnownWord = GetNonFoundedWord();
         int letterAmount = _unKnownWord.Word.Length;
-        _categoryText.text = new string('-', letterAmount);
         _descriptionText.text = _unKnownWord.Description;
     }
 
@@ -74,11 +73,13 @@ public class HintPopup : MonoBehaviour
     {
         Hide();
     }
+
     private void Okay()
     {
         ResetPopup();
         Hide();
     }
+
     private void UseHint()
     {
         if (ResourcesManager.Instance.IsEnoughResource(ResourceTypes.Hints, 1))
@@ -93,7 +94,7 @@ public class HintPopup : MonoBehaviour
         }
     }
 
-        private GameWord GetNonFoundedWord()
+    private GameWord GetNonFoundedWord()
     {
         foreach (var gameWord in _currentLevel.levelWords)
         {

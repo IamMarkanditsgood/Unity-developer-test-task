@@ -13,17 +13,6 @@ public class PlayerPrefStorage
         return PlayerPrefs.GetInt(key, defaultValue);
     }
 
-    public void SaveString(string key, string value)
-    {
-        PlayerPrefs.SetString(key, value);
-        PlayerPrefs.Save();
-    }
-
-    public string LoadString(string key, string defaultValue = "")
-    {
-        return PlayerPrefs.GetString(key, defaultValue);
-    }
-
     public bool IsSaved(string key)
     {
         if(PlayerPrefs.HasKey(key))
@@ -36,17 +25,5 @@ public class PlayerPrefStorage
     public void ResetSaves()
     {
         PlayerPrefs.DeleteAll();
-    }
-
-    public void ResetKey(string key)
-    {
-        if (PlayerPrefs.HasKey(key))
-        {
-            PlayerPrefs.DeleteKey(key);
-        }
-        else
-        {
-            Debug.Log($"Key {key} was not saved");
-        }
     }
 }

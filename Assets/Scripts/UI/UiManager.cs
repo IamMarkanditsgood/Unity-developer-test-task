@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -25,8 +23,6 @@ public class UiManager : MonoBehaviour
         UIEvents.OnLevelButtonPressed += ShowGameScreen;
         UIEvents.OnLevelsScreenOpenPressed += ShowLevelsScreen;
         UIEvents.OnHintPressed += OpenHintPopup;
-
-
     }
 
     private void Unsubscribe()

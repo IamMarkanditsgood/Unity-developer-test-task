@@ -8,7 +8,6 @@ using Object = UnityEngine.Object;
 [Serializable]
 public class GameScreenViewManager
 {
-
     [SerializeField] private TMP_Text _hintsText;
     [SerializeField] private TMP_Text _levelWordText;
     [SerializeField] private TMP_Text _timerText;
@@ -18,6 +17,14 @@ public class GameScreenViewManager
     [SerializeField] private GameObject _wordPrefab;
 
     private List<GameObject> _words = new List<GameObject>();
+    public void CleanScene()
+    {
+        foreach (var word in _words)
+        {
+            Object.Destroy(word);
+        }
+        _words.Clear();
+    }
 
     public void SetTypedWords(LevelData currentLevel)
     {
@@ -58,20 +65,11 @@ public class GameScreenViewManager
 
     }
 
-    public void CleanScene()
-    {
-        foreach (var word in _words)
-        {
-            Object.Destroy(word);
-        }
-        _words.Clear();
-        
-    }
-
     public void EraseTypedWord()
     {
         _typedWordText.text = "";
     }
+
     public void EraseLastLetter()
     {
         List<char> typedLetters = _typedWordText.text.ToList();
@@ -82,8 +80,19 @@ public class GameScreenViewManager
             _typedWordText.text = new string(typedLetters.ToArray());
         }    
     }
+
     public void AddTypedLetter(char letter)
     {
         _typedWordText.text += letter;
+    }
+
+    public void ModifyHintsText(ResourceTypes resource, int newAmount)
+    {
+        switch (resource)
+        {
+            case ResourceTypes.Hints:
+                _hintsText.text = newAmount.ToString();
+                break;
+        }
     }
 }

@@ -710,6 +710,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 13fb047ad226175408b66659e2531183, type: 3}
   - {fileID: 21300000, guid: e81f9ebd41e46d247aa5b1056f41eb22, type: 3}
   - {fileID: 21300000, guid: 1ed9bdf67d4c7c848bd14f4105cd9675, type: 3}
-  _medalPercents: 1e0000003c0000005a000000
+  _medalPercentMas: 1e0000003b00000059000000
+  bronzeMedalIndex: 0
   _levelProgress: {fileID: 3968510472047713948}
   _doneSign: {fileID: 6713257043622154581}

@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameInitializer : MonoBehaviour
 {
-    private GameConfig _gameData = new GameConfig();
+    private GameLevelsData _gameData = new GameLevelsData();
     private LevelsManager _levelsManager = new LevelsManager();
 
     private void Start()
@@ -15,7 +14,7 @@ public class GameInitializer : MonoBehaviour
         _levelsManager.Unsubscribe();
     }
 
-    public void Init(GameConfig gameData)
+    public void Init(GameLevelsData gameData)
     {
         _gameData = gameData;
         _levelsManager.InitLevels(_gameData);
