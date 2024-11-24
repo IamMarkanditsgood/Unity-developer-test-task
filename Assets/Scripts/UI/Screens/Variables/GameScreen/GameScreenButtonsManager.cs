@@ -7,6 +7,9 @@ using UnityEngine.UI;
 [Serializable]
 public class GameScreenButtonsManager
 {
+    [SerializeField] private AudioManager _audioManager;
+    [SerializeField] private AudioConfig _buttonSound;
+
     [SerializeField] private Button _hintButton;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Button _fullEraseButton;
@@ -93,7 +96,7 @@ public class GameScreenButtonsManager
 
     private void FullErase()
     {
-        
+        _audioManager.PlayOneShot(_buttonSound);
         ResetButtons();
         _typedLetters = new List<int>();
         OnFullErase?.Invoke();
@@ -101,6 +104,7 @@ public class GameScreenButtonsManager
 
     private void EraseLastLater()
     {
+        _audioManager.PlayOneShot(_buttonSound);
         _letterButtons[_typedLetters[^1]].interactable = true;
         _letters[_typedLetters[^1]].enabled = true;
 
@@ -111,6 +115,7 @@ public class GameScreenButtonsManager
 
     private void TypeLetter(int letterIndex)
     {
+        _audioManager.PlayOneShot(_buttonSound);
         _letterButtons[letterIndex].interactable = false;
         _letters[letterIndex].enabled = false;
 

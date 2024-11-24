@@ -5173,6 +5173,10 @@ MonoBehaviour:
     _wordPoolContent: {fileID: 2104074246}
     _wordPrefab: {fileID: 535858557487991985, guid: 39a122af17b852947839ae1453fd866f, type: 3}
   _gameScreenButtonsManager:
+    _audioManager:
+      _audioMixerManager:
+        _audioMixer: {fileID: 0}
+    _buttonSound: {fileID: 11400000, guid: 1e40a02f0740f5144ba5741793bddfa5, type: 2}
     _hintButton: {fileID: 1249664127}
     _closeButton: {fileID: 1200116963}
     _fullEraseButton: {fileID: 1181198595}
